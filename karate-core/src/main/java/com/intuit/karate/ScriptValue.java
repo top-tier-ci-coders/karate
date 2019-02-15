@@ -75,49 +75,49 @@ public class ScriptValue {
         Boolean[] cov = AdhocCoverageTool.m.get("getTypeAsShortString");
         switch (type) {
             case NULL:
-                cov[1] = true;
+                cov[0] = true;
                 return "null";
             case UNKNOWN:
-                cov[2] = true;
+                cov[1] = true;
                 return "?";
             case PRIMITIVE:
-                cov[3] = true;
+                cov[2] = true;
                 return "num";
             case STRING:
-                cov[4] = true;
+                cov[3] = true;
                 return "str";
             case MAP:
-                cov[5] = true;
+                cov[4] = true;
                 return "map";
             case LIST:
-                cov[6] = true;
+                cov[5] = true;
                 return "list";
             case JSON:
-                cov[7] = true;
+                cov[6] = true;
                 return "json";
             case XML:
-                cov[8] = true;
+                cov[7] = true;
                 return "xml";
             case JS_ARRAY:
-                cov[9] = true;
+                cov[8] = true;
                 return "js[]";
             case JS_OBJECT:
-                cov[10] = true;
+                cov[9] = true;
                 return "js{}";
             case JS_FUNCTION:
-                cov[11] = true;
+                cov[10] = true;
                 return "js()";
             case BYTE_ARRAY:
-                cov[12] = true;
+                cov[11] = true;
                 return "byte[]";
             case INPUT_STREAM:
-                cov[13] = true;
+                cov[12] = true;
                 return "stream";
             case FEATURE:
-                cov[14] = true;
+                cov[13] = true;
                 return "feature";
             default:
-                cov[15] = true;
+                cov[14] = true;
                 return "???";
         }
     }
