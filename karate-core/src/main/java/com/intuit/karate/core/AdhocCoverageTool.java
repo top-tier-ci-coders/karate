@@ -14,6 +14,6 @@ public class AdhocCoverageTool {
         m.put("mouseDragged", new Boolean[32]);
         m.put("configure", new Boolean[35]);
 	m.put("matchStringOrPattern", new Boolean[103]);
-        m.put("getTypeAsShortString", new Boolean[16]);
+        m.put("getTypeAsShortString", new Boolean[15]);
     }
 }
