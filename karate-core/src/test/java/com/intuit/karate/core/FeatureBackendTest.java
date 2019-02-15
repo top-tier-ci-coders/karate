@@ -23,6 +23,11 @@
  */
 package com.intuit.karate.core;
 
+import static org.junit.Assert.*;
+
+import com.intuit.karate.http.HttpUtils;
+import com.intuit.karate.http.HttpRequest;
+import com.intuit.karate.http.HttpResponse;
 import com.intuit.karate.FileUtils;
 import com.intuit.karate.Match;
 import com.intuit.karate.ScriptValueMap;
@@ -35,7 +40,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author pthomas3
+ * @author pthomas3, Kartal Kaan Bozdoğan
  */
 public class FeatureBackendTest {
 
@@ -59,5 +64,22 @@ public class FeatureBackendTest {
         List<Map> list = vars.get("cats").getAsList();
         Match.equals(list, "[{ id: 1, name: 'Billie' }, { id: 2, name: 'Wild' }]");
     }
+	
+	/*
+	* @author Kartal Kaan Bozdoğan
+	* Tests the function buildResponse.
+	*/
 
+	@Test
+	public void testBuildResponse() {
+		// If cors is enabled, an OPTIONS request shall return "*" in the allowed origins header (meaning that all origins are allowed).
+		File file = FileUtils.getFileRelativeTo(getClass(), "cors_enabled.feature");
+        Feature feature = FeatureParser.parse(file);
+        FeatureBackend backend = new FeatureBackend(feature);
+		assertTrue(backend.isCorsEnabled());
+		HttpRequest request = new HttpRequest();
+        request.setMethod("OPTIONS");
+        HttpResponse response = backend.buildResponse(request, System.currentTimeMillis());
+		assertEquals(response.getHeaders().getFirst(HttpUtils.HEADER_AC_ALLOW_ORIGIN), "*");
+	}
 }
