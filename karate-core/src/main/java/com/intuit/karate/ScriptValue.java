@@ -81,7 +81,7 @@ public class ScriptValue {
                 cov[2] = true;
                 return "?";
             case PRIMITIVE:
-                Wcov[3] = true;
+                cov[3] = true;
                 return "num";
             case STRING:
                 cov[4] = true;
