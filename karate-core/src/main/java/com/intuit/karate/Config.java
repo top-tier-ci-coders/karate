@@ -28,6 +28,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import com.intuit.karate.core.AdhocCoverageTool;
 
 /**
  *
@@ -88,56 +89,74 @@ public class Config {
     }
 
     public boolean configure(String key, ScriptValue value) { // TODO use enum
+        AdhocCoverageTool.m.get("configure")[0] = true;
         key = StringUtils.trimToEmpty(key);
         switch (key) {
             case "headers":
+                AdhocCoverageTool.m.get("configure")[1] = true;
                 headers = value;
                 return false;
             case "cookies":
+                AdhocCoverageTool.m.get("configure")[2] = true;
                 cookies = value;
                 return false;
             case "responseHeaders":
+                AdhocCoverageTool.m.get("configure")[3] = true;
                 responseHeaders = value;
                 return false;
             case "lowerCaseResponseHeaders":
+                AdhocCoverageTool.m.get("configure")[4] = true;
                 lowerCaseResponseHeaders = value.isBooleanTrue();
                 return false;
             case "cors":
+                AdhocCoverageTool.m.get("configure")[5] = true;
                 corsEnabled = value.isBooleanTrue();
                 return false;
             case "logPrettyResponse":
+                AdhocCoverageTool.m.get("configure")[6] = true;
                 logPrettyResponse = value.isBooleanTrue();
                 return false;
             case "logPrettyRequest":
+                AdhocCoverageTool.m.get("configure")[7] = true;
                 logPrettyRequest = value.isBooleanTrue();
                 return false;
             case "printEnabled":
+                AdhocCoverageTool.m.get("configure")[8] = true;
                 printEnabled = value.isBooleanTrue();
                 return false;
             case "afterScenario":
+                AdhocCoverageTool.m.get("configure")[9] = true;
                 afterScenario = value;
                 return false;
             case "afterFeature":
+                AdhocCoverageTool.m.get("configure")[10] = true;
                 afterFeature = value;
                 return false;
             case "report":
+                AdhocCoverageTool.m.get("configure")[11] = true;
                 if (value.isMapLike()) {
+                    AdhocCoverageTool.m.get("configure")[12] = true;    
                     Map<String, Object> map = value.getAsMap();
                     showLog = get(map, "showLog", showLog);
                     showAllSteps = get(map, "showAllSteps", showAllSteps);
                 } else if (value.isBooleanTrue()) {
+                    AdhocCoverageTool.m.get("configure")[13] = true;    
                     showLog = true;
                     showAllSteps = true;
                 } else {
+                    AdhocCoverageTool.m.get("configure")[14] = true;    
                     showLog = false;
                     showAllSteps = false;
                 }
                 return false;
             case "driver":
+                AdhocCoverageTool.m.get("configure")[15] = true;
                 driverOptions = value.getAsMap();
                 return false;
             case "retry":
+                AdhocCoverageTool.m.get("configure")[16] = true;
                 if (value.isMapLike()) {
+                    AdhocCoverageTool.m.get("configure")[17] = true;    
                     Map<String, Object> map = value.getAsMap();
                     retryInterval = get(map, "interval", retryInterval);
                     retryCount = get(map, "count", retryCount);                    
@@ -145,19 +164,25 @@ public class Config {
                 return false;
             // here on the http client has to be re-constructed ================
             case "httpClientClass":
+                AdhocCoverageTool.m.get("configure")[18] = true;
                 clientClass = value.getAsString();
                 return true;
             case "httpClientInstance":
+                AdhocCoverageTool.m.get("configure")[19] = true;
                 clientInstance = value.getValue(HttpClient.class);
                 return true;
             case "charset":
+                AdhocCoverageTool.m.get("configure")[20] = true;
                 charset = value.isNull() ? null : Charset.forName(value.getAsString());
                 return true;
             case "ssl":
+                AdhocCoverageTool.m.get("configure")[21] = true;
                 if (value.isString()) {
+                    AdhocCoverageTool.m.get("configure")[22] = true;
                     sslEnabled = true;
                     sslAlgorithm = value.getAsString();
                 } else if (value.isMapLike()) {
+                    AdhocCoverageTool.m.get("configure")[23] = true;
                     sslEnabled = true;
                     Map<String, Object> map = value.getAsMap();
                     sslKeyStore = (String) map.get("keyStore");
@@ -168,40 +193,51 @@ public class Config {
                     sslTrustStoreType = (String) map.get("trustStoreType");
                     String trustAll = (String) map.get("trustAll");
                     if (trustAll != null) {
+                        AdhocCoverageTool.m.get("configure")[24] = true;
                         sslTrustAll = Boolean.valueOf(trustAll);
                     }
                     sslAlgorithm = (String) map.get("algorithm");
                 } else {
+                    AdhocCoverageTool.m.get("configure")[25] = true;
                     sslEnabled = value.isBooleanTrue();
                 }
                 return true;
             case "followRedirects":
+                AdhocCoverageTool.m.get("configure")[26] = true;
                 followRedirects = value.isBooleanTrue();
                 return true;
             case "connectTimeout":
+                AdhocCoverageTool.m.get("configure")[27] = true;
                 connectTimeout = value.getAsInt();
                 return true;
             case "readTimeout":
+                AdhocCoverageTool.m.get("configure")[28] = true;
                 readTimeout = value.getAsInt();
                 return true;
             case "proxy":
+                AdhocCoverageTool.m.get("configure")[29] = true;
                 if (value.isString()) {
+                    AdhocCoverageTool.m.get("configure")[30] = true;
                     proxyUri = value.getAsString();
                 } else {
+                    AdhocCoverageTool.m.get("configure")[31] = true;
                     Map<String, Object> map = value.getAsMap();
                     proxyUri = (String) map.get("uri");
                     proxyUsername = (String) map.get("username");
                     proxyPassword = (String) map.get("password");
                     ScriptObjectMirror temp = (ScriptObjectMirror) map.get("nonProxyHosts");
                     if (temp != null) {
+                        AdhocCoverageTool.m.get("configure")[32] = true;
                         nonProxyHosts = (List) temp.values();
                     }
                 }
                 return true;
             case "userDefined":
+                AdhocCoverageTool.m.get("configure")[33] = true;
                 userDefined = value.getAsMap();
                 return true;
             default:
+                AdhocCoverageTool.m.get("configure")[34] = true;
                 throw new RuntimeException("unexpected 'configure' key: '" + key + "'");
         }
     }
