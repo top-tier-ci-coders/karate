@@ -36,6 +36,8 @@ import java.util.Map;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.w3c.dom.Node;
 
+import com.intuit.karate.core.AdhocCoverageTool;
+
 /**
  *
  * @author pthomas3
@@ -70,36 +72,52 @@ public class ScriptValue {
     }
 
     public String getTypeAsShortString() {
+        Boolean[] cov = AdhocCoverageTool.m.get("getTypeAsShortString");
         switch (type) {
             case NULL:
+                cov[1] = true;
                 return "null";
             case UNKNOWN:
+                cov[2] = true;
                 return "?";
             case PRIMITIVE:
+                Wcov[3] = true;
                 return "num";
             case STRING:
+                cov[4] = true;
                 return "str";
             case MAP:
+                cov[5] = true;
                 return "map";
             case LIST:
+                cov[6] = true;
                 return "list";
             case JSON:
+                cov[7] = true;
                 return "json";
             case XML:
+                cov[8] = true;
                 return "xml";
             case JS_ARRAY:
+                cov[9] = true;
                 return "js[]";
             case JS_OBJECT:
+                cov[10] = true;
                 return "js{}";
             case JS_FUNCTION:
+                cov[11] = true;
                 return "js()";
             case BYTE_ARRAY:
+                cov[12] = true;
                 return "byte[]";
             case INPUT_STREAM:
+                cov[13] = true;
                 return "stream";
             case FEATURE:
+                cov[14] = true;
                 return "feature";
             default:
+                cov[15] = true;
                 return "???";
         }
     }
@@ -352,7 +370,7 @@ public class ScriptValue {
             return Integer.valueOf(getAsString());
         }
     }
-    
+
     public String getAsString() {
         switch (type) {
             case NULL:
