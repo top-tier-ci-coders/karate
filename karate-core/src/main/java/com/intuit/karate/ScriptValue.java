@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.Map;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.w3c.dom.Node;
+import com.intuit.karate.core.AdhocCoverageTool;
+
 
 /**
  *
@@ -355,34 +357,44 @@ public class ScriptValue {
     
     public String getAsString() {
         switch (type) {
-            case NULL:
+            case NULL: //This is covered by existing tests
+                AdhocCoverageTool.m.get("getAsString")[0] = true;
                 return null;
-            case JSON:
+            case JSON: //This is covered by existing tests
+                AdhocCoverageTool.m.get("getAsString")[1] = true;
                 DocumentContext doc = getValue(DocumentContext.class);
                 return doc.jsonString();
-            case XML:
+            case XML: //This is covered by existing tests
                 Node node = getValue(Node.class);
                 if (node.getTextContent() != null) { // for attributes, text() etc
+                    AdhocCoverageTool.m.get("getAsString")[2] = true;
                     return node.getTextContent();
                 } else {
+                    AdhocCoverageTool.m.get("getAsString")[3] = true;
                     return XmlUtils.toString(node);
                 }
-            case JS_ARRAY:
+            case JS_ARRAY: //This is NOT covered by existing tests, I have covered it with new tests
             case LIST:
+                AdhocCoverageTool.m.get("getAsString")[4] = true;
                 List list = getAsList();
                 DocumentContext listDoc = JsonPath.parse(list);
                 return listDoc.jsonString();
-            case JS_OBJECT:
+            case JS_OBJECT: //This is NOT covered by existing tests, I have covered it with new tests
             case MAP:
+                AdhocCoverageTool.m.get("getAsString")[5] = true;
                 DocumentContext mapDoc = JsonPath.parse(getAsMap());
                 return mapDoc.jsonString();
-            case JS_FUNCTION:
+            case JS_FUNCTION: //This and all cases below are not covered by existing tests
+                AdhocCoverageTool.m.get("getAsString")[6] = true;
                 return value.toString().replace("\n", " ");
             case BYTE_ARRAY:
+                AdhocCoverageTool.m.get("getAsString")[7] = true;
                 return FileUtils.toString(getValue(byte[].class));
             case INPUT_STREAM:
+                AdhocCoverageTool.m.get("getAsString")[8] = true;
                 return FileUtils.toString(getValue(InputStream.class));
             default:
+                AdhocCoverageTool.m.get("getAsString")[9] = true;
                 return value.toString();
         }
     }
