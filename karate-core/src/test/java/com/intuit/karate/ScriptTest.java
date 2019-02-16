@@ -20,7 +20,7 @@ import org.w3c.dom.Document;
 
 /**
  *
- * @author pthomas3
+ * @author pthomas3, Kartal Kaan Bozdoğan
  */
 public class ScriptTest {
 
@@ -36,6 +36,18 @@ public class ScriptTest {
     private AssertionResult matchJsonObject(Object act, Object exp, ScenarioContext context) {
         return Script.matchNestedObject('.', "$", MatchType.EQUALS, null, null, act, exp, context);
     }
+	
+	/*
+	* @author Kartal Kaan Bozdoğan
+	* Tests the function matchStringOrPattern.
+	*/
+	
+	@Test
+    public void testMatchStringOrPattern() {
+		// true != null. Therefore, MatchType.EQUALS shall not pass if the expected value is null but we got true
+		AssertionResult result = Script.matchStringOrPattern('*', "", MatchType.EQUALS, null, null, new ScriptValue(true), null, getContext());
+		assertFalse(result.pass);
+	}
 
     @Test
     public void testParsingTextType() {
