@@ -27,6 +27,11 @@ public class MatchStepTest {
         test("each hello world == foo", EACH_EQUALS, "hello", "world", "foo");
         test("hello.foo(bar) != blah", NOT_EQUALS, "hello.foo(bar)", null, "blah");
         test("foo count(/records//record) contains any blah", CONTAINS_ANY, "foo", "count(/records//record)", "blah");
+        test("foo count(/records//record) contains only blah", CONTAINS_ONLY, "foo", "count(/records//record)", "blah");
+        test("each foo count(/records//record) contains any blah", EACH_CONTAINS_ANY, "foo", "count(/records//record)", "blah");
+        test("each foo count(/records//record) contains only blah", EACH_CONTAINS_ONLY, "foo", "count(/records//record)", "blah");
+        test("each foo count(/records//record) contains blah", EACH_CONTAINS, "foo", "count(/records//record)", "blah");
+        test("each foo count(/records//record) !contains blah", EACH_NOT_CONTAINS, "foo", "count(/records//record)", "blah");
         test("__arg == karate.get('foos[' + __loop + ']')", EQUALS, "__arg", null, "karate.get('foos[' + __loop + ']')");
         test("response $[?(@.b=='ab')] == '#[1]'", EQUALS, "response", "$[?(@.b=='ab')]", "'#[1]'");
         test("test != '#? _.length == 2'", NOT_EQUALS, "test", null, "'#? _.length == 2'");
@@ -34,5 +39,4 @@ public class MatchStepTest {
         test("actual[0] contains badSchema", CONTAINS, "actual[0]", null, "badSchema");
         test("driver.eval('{ foo: \"bar\" }') == { hello: 'world' }", EQUALS, "driver.eval('{ foo: \"bar\" }')", null, "{ hello: 'world' }");
     }
-
 }
