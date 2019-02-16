@@ -23,14 +23,10 @@
  */
 package com.intuit.karate;
 
-import com.intuit.karate.core.MatchType;
-import com.intuit.karate.core.FeatureContext;
-import com.intuit.karate.core.ScenarioContext;
+import com.intuit.karate.core.*;
 import com.intuit.karate.exception.KarateException;
 import static com.intuit.karate.ScriptValue.Type.*;
-import com.intuit.karate.core.Engine;
-import com.intuit.karate.core.Feature;
-import com.intuit.karate.core.FeatureResult;
+
 import com.intuit.karate.validator.ArrayValidator;
 import com.intuit.karate.validator.BooleanValidator;
 import com.intuit.karate.validator.IgnoreValidator;
@@ -250,6 +246,13 @@ public class Script {
         return null;
     }
 
+    /** Parses expression, returns a ScriptValue
+     *
+     * @param text - The expression to be evaluated
+     * @param context
+     * @param forMatch
+     * @return
+     */
     private static ScriptValue evalKarateExpression(String text, ScenarioContext context, boolean forMatch) {
         text = StringUtils.trimToNull(text);
         if (text == null) {
@@ -1166,8 +1169,25 @@ public class Script {
                 throw new RuntimeException("unexpected outer match type: " + outerMatchType);
         }
     }
+    
+    /**
+     * DISCLAIMER: This is how I interpreted some of the parameters. The comment below is for my own understanding of what is happening.
+     * / Philippa
+     * The important bits of the function are ScriptValue actual and String expression.
+     * These will be compared (or matched if you will) against each other.
+     *
+     * The String expression will be evaluated (parsed) by evalKarateExpression to determine
+     * it's ScriptValue type (JSON, XML, String etc...).
+     *
+     * If, for example actual and expression doesn't share ScriptValue types, this might be a problem.
+     * @param matchType is a descriptive ENUM which says which kind of match we are looking for.
+     * @param actual is a ScriptValue which is a parsed value which can be of different types such as STRING, JSON, XML etc..
+     * @param path is a JsonPath? (the project uses JsonPath and XPath expressions)
+     * @param expression the expression to be matched with actual
+     * @param context
+     */
 
-    public static AssertionResult matchJsonOrObject(MatchType matchType, ScriptValue actual, String path, String expression, ScenarioContext context) {
+        public static AssertionResult matchJsonOrObject(MatchType matchType, ScriptValue actual, String path, String expression, ScenarioContext context) {
         DocumentContext actualDoc;
         switch (actual.getType()) {
             case JSON:
@@ -1175,9 +1195,11 @@ public class Script {
             case JS_OBJECT:
             case MAP:
             case LIST:
+                AdhocCoverageTool.m.get("matchJsonOrObject")[0] = true;
                 actualDoc = actual.getAsJsonDocument();
                 break;
             case XML: // auto convert !
+                AdhocCoverageTool.m.get("matchJsonOrObject")[1] = true;
                 actualDoc = XmlUtils.toJsonDoc(actual.getValue(Node.class));
                 break;
             case STRING: // an edge case when the variable is a plain string not JSON, so switch to plain string compare
@@ -1186,31 +1208,40 @@ public class Script {
                 ScriptValue expectedString = evalKarateExpression(expression, context);
                 // exit the function early
                 if (!expectedString.isStringOrStream()) {
+                    AdhocCoverageTool.m.get("matchJsonOrObject")[2] = true;
                     return matchFailed(matchType, path, actualString, expectedString.getValue(),
                             "type of actual value is 'string' but that of expected is " + expectedString.getType());
                 } else {
+                    AdhocCoverageTool.m.get("matchJsonOrObject")[3] = true;
                     return matchStringOrPattern('.', path, matchType, null, null, actual, expectedString.getAsString(), context);
                 }
             case PRIMITIVE: // an edge case when the variable is non-string, not-json (number / boolean)
                 ScriptValue expected = evalKarateExpression(expression, context);
                 if (expected.isStringOrStream()) { // fuzzy match macro
+                    AdhocCoverageTool.m.get("matchJsonOrObject")[4] = true;
                     return matchStringOrPattern('.', path, matchType, null, null, actual, expected.getAsString(), context);
                 } else {
+                    AdhocCoverageTool.m.get("matchJsonOrObject")[5] = true;
                     return matchPrimitive(matchType, path, actual.getValue(), expected.getValue());
                 }
             case NULL: // edge case, assume that this is the root variable that is null and the match is for an optional e.g. '##string'
                 ScriptValue expectedNull = evalKarateExpression(expression, context);
                 if (expectedNull.isNull()) {
                     if (matchType == MatchType.NOT_EQUALS) {
+                        AdhocCoverageTool.m.get("matchJsonOrObject")[6] = true;
                         return matchFailed(matchType, path, null, null, "actual and expected values are both null");
                     }
+                    AdhocCoverageTool.m.get("matchJsonOrObject")[7] = true;
                     return AssertionResult.PASS;
                 } else if (!expectedNull.isStringOrStream()) { // primitive or anything which is not a string
                     if (matchType == MatchType.NOT_EQUALS) {
+                        AdhocCoverageTool.m.get("matchJsonOrObject")[8] = true;
                         return AssertionResult.PASS;
                     }
+                    AdhocCoverageTool.m.get("matchJsonOrObject")[9] = true;
                     return matchFailed(matchType, path, null, expectedNull.getValue(), "actual value is null but expected is " + expectedNull);
                 } else {
+                    AdhocCoverageTool.m.get("matchJsonOrObject")[10] = true;
                     return matchStringOrPattern('.', path, matchType, null, null, actual, expectedNull.getAsString(), context);
                 }
             case BYTE_ARRAY:
@@ -1219,16 +1250,21 @@ public class Script {
                 byte[] actualBytes = actual.getAsByteArray();
                 if (Arrays.equals(expectedBytes, actualBytes)) {
                     if (matchType == MatchType.NOT_EQUALS) {
+                        AdhocCoverageTool.m.get("matchJsonOrObject")[11] = true;
                         return matchFailed(matchType, path, actualBytes, expectedBytes, "actual and expected byte-arrays are not equal");
                     }
+                    AdhocCoverageTool.m.get("matchJsonOrObject")[12] = true;
                     return AssertionResult.PASS;
                 } else {
                     if (matchType == MatchType.NOT_EQUALS) {
+                        AdhocCoverageTool.m.get("matchJsonOrObject")[13] = true;
                         return AssertionResult.PASS;
                     }
+                    AdhocCoverageTool.m.get("matchJsonOrObject")[14] = true;
                     return matchFailed(matchType, path, actualBytes, expectedBytes, "actual and expected byte-arrays are not equal");
                 }
             default:
+                AdhocCoverageTool.m.get("matchJsonOrObject")[15] = true;
                 throw new RuntimeException("not json, cannot do json path for value: " + actual + ", path: " + path);
         }
         ScriptValue expected = evalKarateExpressionForMatch(expression, context);
@@ -1237,21 +1273,26 @@ public class Script {
             actObject = actualDoc.read(path); // note that the path for actObject is 'reset' to '$' here
         } catch (PathNotFoundException e) {
             if (expected.isString() && "#notpresent".equals(expected.getValue())) {
+                AdhocCoverageTool.m.get("matchJsonOrObject")[16] = true;
                 return AssertionResult.PASS;
             } else {
+                AdhocCoverageTool.m.get("matchJsonOrObject")[17] = true;
                 return matchFailed(matchType, path, null, expected.getValue(), "actual json-path does not exist");
             }
         }
         Object expObject;
         switch (expected.getType()) {
             case JSON: // convert to map or list
+                AdhocCoverageTool.m.get("matchJsonOrObject")[18] = true;
                 expObject = expected.getValue(DocumentContext.class).read("$");
                 break;
             case JS_ARRAY: // array returned by js function, needs conversion to list
+                AdhocCoverageTool.m.get("matchJsonOrObject")[19] = true;
                 ScriptObjectMirror som = expected.getValue(ScriptObjectMirror.class);
                 expObject = new ArrayList(som.values());
                 break;
-            default: // btw JS_OBJECT is already a map 
+            default: // btw JS_OBJECT is already a map
+                AdhocCoverageTool.m.get("matchJsonOrObject")[20] = true;
                 expObject = expected.getValue();
         }
         switch (matchType) {
@@ -1260,10 +1301,12 @@ public class Script {
             case CONTAINS_ONLY:
             case CONTAINS_ANY:
                 if (actObject instanceof List && !(expObject instanceof List)) { // if RHS is not a list, make it so
+                    AdhocCoverageTool.m.get("matchJsonOrObject")[21] = true;
                     expObject = Collections.singletonList(expObject);
                 }
             case NOT_EQUALS:
             case EQUALS:
+                AdhocCoverageTool.m.get("matchJsonOrObject")[22] = true;
                 return matchNestedObject('.', path, matchType, actualDoc, null, actObject, expObject, context);
             case EACH_CONTAINS:
             case EACH_NOT_CONTAINS:
@@ -1272,6 +1315,7 @@ public class Script {
             case EACH_NOT_EQUALS:
             case EACH_EQUALS:
                 if (actObject instanceof List) {
+                    AdhocCoverageTool.m.get("matchJsonOrObject")[23] = true;
                     List actList = (List) actObject;
                     MatchType listMatchType = getInnerMatchType(matchType);
                     int actSize = actList.size();
@@ -1279,22 +1323,29 @@ public class Script {
                         Object actListObject = actList.get(i);
                         AssertionResult ar = matchNestedObject('.', "$[" + i + "]", listMatchType, actObject, actListObject, actListObject, expObject, context);
                         if (!ar.pass) {
+                            AdhocCoverageTool.m.get("matchJsonOrObject")[24] = true;
                             if (matchType == MatchType.EACH_NOT_EQUALS) {
+                                AdhocCoverageTool.m.get("matchJsonOrObject")[25] = true;
                                 return AssertionResult.PASS; // exit early
                             } else {
+                                AdhocCoverageTool.m.get("matchJsonOrObject")[26] = true;
                                 return ar; // fail early
                             }
                         }
+                        AdhocCoverageTool.m.get("matchJsonOrObject")[27] = true;
                     }
                     // if we reached here all list items (each) matched
                     if (matchType == MatchType.EACH_NOT_EQUALS) {
+                        AdhocCoverageTool.m.get("matchJsonOrObject")[28] = true;
                         return matchFailed(matchType, path, actual.getValue(), expected.getValue(), "all list items matched");
                     }
+                    AdhocCoverageTool.m.get("matchJsonOrObject")[29] = true;
                     return AssertionResult.PASS;
                 } else {
+                    AdhocCoverageTool.m.get("matchJsonOrObject")[30] = true;
                     throw new RuntimeException("'match each' failed, not a json array: + " + actual + ", path: " + path);
                 }
-            default: // dead code
+            default: // dead codes
                 throw new RuntimeException("unexpected match type: " + matchType);
         }
     }
