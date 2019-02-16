@@ -13,6 +13,7 @@ public class AdhocCoverageTool {
         m.put("stepHtml", new Boolean[22]);
         m.put("configure", new Boolean[35]);
         m.put("mouseDragged", new Boolean[32]);
+        m.put("buildResponse", new Boolean[33]);
         m.put("convert", new Boolean[15]);
         m.put("getTypeAsShortString", new Boolean[15]);
 		    m.put("matchStringOrPattern", new Boolean[103]);
