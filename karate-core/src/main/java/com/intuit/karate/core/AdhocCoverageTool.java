@@ -12,7 +12,7 @@ public class AdhocCoverageTool {
         // Ex: m.put("ParseUriPattern", new Boolean[10]);
         m.put("stepHtml", new Boolean[22]);
         m.put("mouseDragged", new Boolean[32]);
-        m.put("matchJsonOrObject", new Boolean[31]);
+        m.put("matchJsonOrObject", new Boolean[33]);
 
     }
 }

@@ -1143,28 +1143,29 @@ public class Script {
         Object actObject;
         try {
             actObject = actualDoc.read(path); // note that the path for actObject is 'reset' to '$' here
+            AdhocCoverageTool.m.get("matchJsonOrObject")[16] = true;
         } catch (PathNotFoundException e) {
             if (expected.isString() && "#notpresent".equals(expected.getValue())) {
-                AdhocCoverageTool.m.get("matchJsonOrObject")[16] = true;
+                AdhocCoverageTool.m.get("matchJsonOrObject")[17] = true;
                 return AssertionResult.PASS;
             } else {
-                AdhocCoverageTool.m.get("matchJsonOrObject")[17] = true;
+                AdhocCoverageTool.m.get("matchJsonOrObject")[18] = true;
                 return matchFailed(matchType, path, null, expected.getValue(), "actual json-path does not exist");
             }
         }
         Object expObject;
         switch (expected.getType()) {
             case JSON: // convert to map or list
-                AdhocCoverageTool.m.get("matchJsonOrObject")[18] = true;
+                AdhocCoverageTool.m.get("matchJsonOrObject")[19] = true;
                 expObject = expected.getValue(DocumentContext.class).read("$");
                 break;
             case JS_ARRAY: // array returned by js function, needs conversion to list
-                AdhocCoverageTool.m.get("matchJsonOrObject")[19] = true;
+                AdhocCoverageTool.m.get("matchJsonOrObject")[20] = true;
                 ScriptObjectMirror som = expected.getValue(ScriptObjectMirror.class);
                 expObject = new ArrayList(som.values());
                 break;
             default: // btw JS_OBJECT is already a map
-                AdhocCoverageTool.m.get("matchJsonOrObject")[20] = true;
+                AdhocCoverageTool.m.get("matchJsonOrObject")[21] = true;
                 expObject = expected.getValue();
         }
         switch (matchType) {
@@ -1173,12 +1174,13 @@ public class Script {
             case CONTAINS_ONLY:
             case CONTAINS_ANY:
                 if (actObject instanceof List && !(expObject instanceof List)) { // if RHS is not a list, make it so
-                    AdhocCoverageTool.m.get("matchJsonOrObject")[21] = true;
+                    AdhocCoverageTool.m.get("matchJsonOrObject")[22] = true;
                     expObject = Collections.singletonList(expObject);
                 }
+                else{AdhocCoverageTool.m.get("matchJsonOrObject")[23] = true;} // Added else so we see if the if doesnt hold
             case NOT_EQUALS:
             case EQUALS:
-                AdhocCoverageTool.m.get("matchJsonOrObject")[22] = true;
+                AdhocCoverageTool.m.get("matchJsonOrObject")[24] = true;
                 return matchNestedObject('.', path, matchType, actualDoc, null, actObject, expObject, context);
             case EACH_CONTAINS:
             case EACH_NOT_CONTAINS:
@@ -1187,7 +1189,7 @@ public class Script {
             case EACH_NOT_EQUALS:
             case EACH_EQUALS:
                 if (actObject instanceof List) {
-                    AdhocCoverageTool.m.get("matchJsonOrObject")[23] = true;
+                    AdhocCoverageTool.m.get("matchJsonOrObject")[25] = true;
                     List actList = (List) actObject;
                     MatchType listMatchType = getInnerMatchType(matchType);
                     int actSize = actList.size();
@@ -1195,26 +1197,26 @@ public class Script {
                         Object actListObject = actList.get(i);
                         AssertionResult ar = matchNestedObject('.', "$[" + i + "]", listMatchType, actObject, actListObject, actListObject, expObject, context);
                         if (!ar.pass) {
-                            AdhocCoverageTool.m.get("matchJsonOrObject")[24] = true;
+                            AdhocCoverageTool.m.get("matchJsonOrObject")[26] = true;
                             if (matchType == MatchType.EACH_NOT_EQUALS) {
-                                AdhocCoverageTool.m.get("matchJsonOrObject")[25] = true;
+                                AdhocCoverageTool.m.get("matchJsonOrObject")[27] = true;
                                 return AssertionResult.PASS; // exit early
                             } else {
-                                AdhocCoverageTool.m.get("matchJsonOrObject")[26] = true;
+                                AdhocCoverageTool.m.get("matchJsonOrObject")[28] = true;
                                 return ar; // fail early
                             }
                         }
-                        AdhocCoverageTool.m.get("matchJsonOrObject")[27] = true;
+                        AdhocCoverageTool.m.get("matchJsonOrObject")[29] = true;
                     }
                     // if we reached here all list items (each) matched
                     if (matchType == MatchType.EACH_NOT_EQUALS) {
-                        AdhocCoverageTool.m.get("matchJsonOrObject")[28] = true;
+                        AdhocCoverageTool.m.get("matchJsonOrObject")[30] = true;
                         return matchFailed(matchType, path, actual.getValue(), expected.getValue(), "all list items matched");
                     }
-                    AdhocCoverageTool.m.get("matchJsonOrObject")[29] = true;
+                    AdhocCoverageTool.m.get("matchJsonOrObject")[31] = true;
                     return AssertionResult.PASS;
                 } else {
-                    AdhocCoverageTool.m.get("matchJsonOrObject")[30] = true;
+                    AdhocCoverageTool.m.get("matchJsonOrObject")[32] = true;
                     throw new RuntimeException("'match each' failed, not a json array: + " + actual + ", path: " + path);
                 }
             default: // dead codes
