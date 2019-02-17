@@ -26,7 +26,11 @@ package com.intuit.karate;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import static com.intuit.karate.ScriptValue.Type.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.*;
 import java.lang.*;
 import java.io.*;
@@ -130,4 +134,43 @@ public class ScriptValueTest {
       // UNKNOWN TYPE
       // TODO
     }
+
+    /**
+     * This test is to add coverage to getAsString. It is currently not testing
+     * for some types like MAP, LIST etc.
+     * The getAsString method should return the scriptValue values as Strings.
+     * These tests increases the coverage from 45% to 64% in JaCoco.
+     * @author Philippa Ö
+     */
+    @Test
+    public void testGetAsString(){
+        // Want to create object of type MAP
+        Map<String, Object> testMap = new HashMap<>();
+        testMap.put("foo", "bar"); // {foo = bar}
+        testMap.put("bar", "baz"); // {bar = baz}
+        ScriptValue svMAP = new ScriptValue(testMap); // [type: MAP, value: {foo=bar}]
+        String svAsString = svMAP.getAsString();
+        assertTrue(svAsString instanceof String); // Make sure that the object is now of class String
+
+        // Checks that getAsString gives the expected output as shown below
+        assertEquals(true,"{\"bar\":\"baz\",\"foo\":\"bar\"}".equals(svAsString)); // Check that the conversion is correct
+        Map<String, int[]> testMapList = new HashMap<>();
+        testMapList.put("foo", new int[10]);
+        for(int i = 0; i < 10; i++){
+            testMapList.get("foo")[i] = i;
+        }
+        ScriptValue mapList = new ScriptValue(testMapList);
+        // Checks that getAsString gives the expected output as shown below
+        assertEquals(true, "{\"foo\":[0,1,2,3,4,5,6,7,8,9]}".equals(mapList.getAsString())); // Check that it works for map with list too
+
+        List<Integer> testList = new ArrayList<>(); // Want to check that the function works on lists
+        testList.add(10);
+        testList.add(15);
+        ScriptValue svLIST = new ScriptValue(testList);
+        assertTrue(svLIST.getAsString() instanceof String); // getAsString gives us a string.
+        // Checks that getAsString gives the expected output as shown below
+        assertEquals(true, "[10,15]".equals(svLIST.getAsString()));
+
+    }
+
 }
