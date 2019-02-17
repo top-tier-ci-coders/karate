@@ -163,7 +163,10 @@ public class FeatureBackend {
     private static final String ALLOWED_METHODS = "GET, HEAD, POST, PUT, DELETE, PATCH";
     
     public HttpResponse buildResponse(HttpRequest request, long startTime) {
+        Boolean[] cov = AdhocCoverageTool.m.get("buildResponse");
+        
         if (corsEnabled && "OPTIONS".equals(request.getMethod())) {
+            cov[0] = true;
             HttpResponse response = new HttpResponse(startTime, System.currentTimeMillis());
             response.setStatus(200);
             response.addHeader(HttpUtils.HEADER_ALLOW, ALLOWED_METHODS);
@@ -171,10 +174,15 @@ public class FeatureBackend {
             response.addHeader(HttpUtils.HEADER_AC_ALLOW_METHODS, ALLOWED_METHODS);
             List requestHeaders = request.getHeaders().get(HttpUtils.HEADER_AC_REQUEST_HEADERS);
             if (requestHeaders != null) {
+                cov[1] = true;
                 response.putHeader(HttpUtils.HEADER_AC_ALLOW_HEADERS, requestHeaders);
             }            
+            else
+                cov[2] = true;
             return response;
         }
+        else
+            cov[3] = true;
         Match match = new Match()
                 .text(ScriptValueMap.VAR_REQUEST_URL_BASE, request.getUrlBase())
                 .text(ScriptValueMap.VAR_REQUEST_URI, request.getUri())
@@ -184,24 +192,33 @@ public class FeatureBackend {
                 .def(ScriptValueMap.VAR_REQUEST_PARAMS, request.getParams());
         byte[] requestBytes = request.getBody();
         if (requestBytes != null) {
+            cov[4] = true;
             match.def(ScriptValueMap.VAR_REQUEST_BYTES, requestBytes);
             String requestString = FileUtils.toString(requestBytes);
             Object requestBody = requestString;
             if (Script.isJson(requestString)) {
+                cov[5] = true;
                 try {
                     requestBody = JsonUtils.toJsonDoc(requestString);
                 } catch (Exception e) {
+                    cov[6] = true;
                     context.logger.warn("json parsing failed, request data type set to string: {}", e.getMessage());
                 }
             } else if (Script.isXml(requestString)) {
+                cov[7] = true;
                 try {
                     requestBody = XmlUtils.toXmlDoc(requestString);
                 } catch (Exception e) {
+                    cov[8] = true;
                     context.logger.warn("xml parsing failed, request data type set to string: {}", e.getMessage());
                 }
             }
+            else
+                cov[9] = true;
             match.def(ScriptValueMap.VAR_REQUEST, requestBody);
         }
+        else
+            cov[10] = true;
         ScriptValue responseValue, responseStatusValue, responseHeaders, afterScenario;
         Map<String, Object> responseHeadersMap, configResponseHeadersMap;
         // this is a sledgehammer approach to concurrency !
@@ -214,8 +231,11 @@ public class FeatureBackend {
             responseHeaders = result.remove(ScriptValueMap.VAR_RESPONSE_HEADERS);
             afterScenario = result.remove(VAR_AFTER_SCENARIO);
             if (afterScenario == null) {
+                cov[11] = true;
                 afterScenario = context.getConfig().getAfterScenario();
             }
+            else
+                cov[12] = true;
             configResponseHeadersMap = configResponseHeaders == null ? null : configResponseHeaders.evalAsMap(context);
             responseHeadersMap = responseHeaders == null ? null : responseHeaders.evalAsMap(context);
         } // END TRANSACTION !!
@@ -223,41 +243,70 @@ public class FeatureBackend {
         HttpResponse response = new HttpResponse(startTime, System.currentTimeMillis());
         response.setStatus(responseStatus);
         if (responseValue != null && !responseValue.isNull()) {
+            cov[13] = true;
             if (responseValue.isByteArray()) {
+                cov[14] = true;
                 response.setBody(responseValue.getValue(byte[].class));
             } else {
+                cov[15] = true;
                 response.setBody(FileUtils.toBytes(responseValue.getAsString()));
             }
         }
+        else
+            cov[16] = true;
         // trying to avoid creating a map unless absolutely necessary
         if (responseHeadersMap != null) {
+            cov[17] = true;
             if (configResponseHeadersMap != null) {
+                cov[18] = true;
                 responseHeadersMap.putAll(configResponseHeadersMap);
             }
+            else
+                cov[19] = true;
         } else if (configResponseHeadersMap != null) {
+            cov[20] = true;
             responseHeadersMap = configResponseHeadersMap;
         }
+        else
+            cov[21] = true;
         if (responseHeadersMap != null) {
+            cov[22] = true;
             responseHeadersMap.forEach((k, v) -> {
                 if (v instanceof List) { // MultiValueMap returned by proceed / response.headers
+                    cov[23] = true;
                     response.putHeader(k, (List) v);
                 } else if (v != null) {                    
+                    cov[24] = true;
                     response.addHeader(k, v.toString());
                 }
+                else
+                    cov[25] = true;
             }); 
         }
+        else
+            cov[26] = true;
         if (responseValue != null && (responseHeadersMap == null || !responseHeadersMap.containsKey(HttpUtils.HEADER_CONTENT_TYPE))) {
+            cov[27] = true;
             response.addHeader(HttpUtils.HEADER_CONTENT_TYPE, HttpUtils.getContentType(responseValue));
         }        
+        else
+            cov[28] = true;
         if (corsEnabled) {
+            cov[29] = true;
             response.addHeader(HttpUtils.HEADER_AC_ALLOW_ORIGIN, "*");
         }
+        else
+            cov[30] = true;
         // functions here are outside of the 'transaction' and should not mutate global state !
         // typically this is where users can set up an artificial delay or sleep
         if (afterScenario != null && afterScenario.isFunction()) {
+            cov[31] = true;
             afterScenario.invokeFunction(context, null);
         }
+        else
+            cov[32] = true;
         return response;
     }    
 
 }
+

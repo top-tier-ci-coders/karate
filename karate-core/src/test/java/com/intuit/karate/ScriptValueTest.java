@@ -31,7 +31,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.*;
+import java.lang.*;
+import java.io.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static org.junit.Assert.*;
@@ -42,9 +44,9 @@ import org.junit.Test;
  * @author pthomas3
  */
 public class ScriptValueTest {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(ScriptValueTest.class);
-   
+
     @Test
     public void testTypeDetection() {
         DocumentContext doc = JsonPath.parse("{ foo: 'bar' }");
@@ -52,7 +54,7 @@ public class ScriptValueTest {
         assertEquals(JSON, sv.getType());
         doc = JsonPath.parse("[1, 2]");
         sv = new ScriptValue(doc);
-        assertEquals(JSON, sv.getType());  
+        assertEquals(JSON, sv.getType());
         Object temp = doc.read("$");
         assertTrue(temp instanceof List);
         sv = new ScriptValue(1);
@@ -66,7 +68,71 @@ public class ScriptValueTest {
         sv = new ScriptValue(1.0);
         assertTrue(sv.isPrimitive());
         assertTrue(sv.isNumber());
-        assertEquals(1.0, sv.getAsNumber().doubleValue(), 0);         
+        assertEquals(1.0, sv.getAsNumber().doubleValue(), 0);
+    }
+
+    /**
+    @author Andreas Gylling
+    */
+    @Test
+    public void testGetTypeAsShortString(){
+
+      //JSON TYPE
+      DocumentContext doc = JsonPath.parse("{ foo: 'bar' }");
+      ScriptValue sv = new ScriptValue(doc, ".");
+      assertEquals("json", sv.getTypeAsShortString());
+
+      sv = new ScriptValue(null, ".");
+      assertEquals("null",sv.getTypeAsShortString());
+      assertTrue(sv.isNull());
+
+      //XML TYPE (instance of NODE)
+      // TODO
+
+      //LIST TYPE
+      doc = JsonPath.parse("[1, 2]");
+      Object myList = doc.read("$");
+      assertTrue(myList instanceof List);
+      sv = new ScriptValue(myList, ".");
+      assertEquals("list",sv.getTypeAsShortString());
+
+      // Map JS_ARRAY TYPE
+      // TODO
+
+      //Map JS_FUNCTION TYPE
+      // TODO
+
+      //Map JS_OBJECT TYPE
+      // TODO
+
+      // MAP TYPE
+      // TODO
+
+      // STRING TYPE
+      sv = new ScriptValue("string type", ".");
+      assertEquals("str", sv.getTypeAsShortString());
+      assertTrue(sv.isString());
+      // BYTE_ARRAY TYPE
+      byte[] ba = "bytearray".getBytes();
+      sv = new ScriptValue(ba, ".");
+      assertEquals("byte[]", sv.getTypeAsShortString());
+      assertTrue(sv.isByteArray());
+      // INPUT STREAM TYPE
+      sv = new ScriptValue(System.in, ".");
+      assertEquals("stream", sv.getTypeAsShortString());
+      assertTrue(sv.isStringOrStream());
+      assertTrue(sv.isStream());
+      // PRIMITIVE TYPE
+      sv = new ScriptValue(1, ".");
+      assertEquals("num", sv.getTypeAsShortString());
+      assertTrue(sv.isPrimitive());
+      assertTrue(sv.isNumber());
+
+      // FEATURE TYPE
+      // TODO
+      
+      // UNKNOWN TYPE
+      // TODO
     }
 
     /**
@@ -106,5 +172,5 @@ public class ScriptValueTest {
         assertEquals(true, "[10,15]".equals(svLIST.getAsString()));
 
     }
-    
+
 }
