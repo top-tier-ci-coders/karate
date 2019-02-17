@@ -32,6 +32,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.intuit.karate.core.AdhocCoverageTool;
+
 /**
  *
  * @author pthomas3
@@ -52,27 +54,35 @@ public class HttpRequestBuilder {
     private String retryUntil;
 
     public HttpRequestBuilder copy() {
+        AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[0] = true;
         HttpRequestBuilder out = new HttpRequestBuilder();
         out.url = url;
         if (paths != null) {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[1] = true;
             out.paths = new ArrayList(paths);
         }
         if (headers != null) {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[2] = true;
             out.headers = new MultiValuedMap(headers);
         }
         if (params != null) {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[3] = true;
             out.params = new MultiValuedMap(params);
         }
         if (cookies != null) {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[4] = true;
             out.cookies = new LinkedHashMap(cookies);
         }
         if (formFields != null) {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[5] = true;
             out.formFields = new MultiValuedMap(formFields);
         }
         if (multiPartItems != null) {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[6] = true;
             out.multiPartItems = new ArrayList(multiPartItems);
         }
         if (body != null) {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[7] = true;
             out.body = body.copy();
         }
         out.method = method;
