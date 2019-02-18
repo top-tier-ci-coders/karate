@@ -49,6 +49,25 @@ public class ScriptTest {
 		assertFalse(result.pass);
 	}
 
+    /**
+     * The purpose of this test is to test the an edge case when
+     * the variable is a plain string and not JSON in the matchJsonOrObject method.
+     * This increases the coverage from 76% to 80% when measured with JaCoCo
+     * @author Philippa Ö
+     */
+    @Test
+    public void testMatchObjectofStringType() {
+        DocumentContext doc = JsonPath.parse("{ foo: 'bar', baz: { ban: [1, 2, 3]} }");
+        ScenarioContext ctx = getContext();
+        ctx.vars.put("testString", doc);
+        String testString = "{ foo: 'bar', baz: { ban: [1, 2, 3]} }";
+        ScriptValue sv = new ScriptValue(testString);
+        //Should fail because we compare a ScriptValue of type STRING with an expression of type JSON
+        // We mock the actual as a string and expression as a JSON object
+        assertFalse(Script.matchJsonOrObject(MatchType.EQUALS, sv, "$.foo", "{'hej':'hej'}", ctx).pass);
+        //System.out.println(Script.matchJsonOrObject(MatchType.EQUALS, sv, "$.foo", "{'hej':'hej'}", ctx).message);
+    }
+
     @Test
     public void testParsingTextType() {
         assertTrue(Script.isVariable("foo"));
