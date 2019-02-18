@@ -337,31 +337,45 @@ public class Engine {
                     tr.appendChild(node(doc, "td", null, cell));
                 }
             }
+        } else {
+            AdhocCoverageTool.m.get("stepHtml")[22] = true;
         }
         StringBuilder sb = new StringBuilder();
         if (step.getDocString() != null) {
             AdhocCoverageTool.m.get("stepHtml")[7] = true;
             sb.append(step.getDocString());
+        } else {
+            AdhocCoverageTool.m.get("stepHtml")[23] = true;
         }
         if (stepResult.getStepLog() != null) {
             AdhocCoverageTool.m.get("stepHtml")[8] = true;
             if (sb.length() > 0) {
                 AdhocCoverageTool.m.get("stepHtml")[9] = true;
                 sb.append('\n');
+            } else {
+                AdhocCoverageTool.m.get("stepHtml")[24] = true;
             }
             sb.append(stepResult.getStepLog());
+        } else {
+            AdhocCoverageTool.m.get("stepHtml")[25] = true;
         }
         if (result.isFailed()) {
             AdhocCoverageTool.m.get("stepHtml")[10] = true;
             if (sb.length() > 0) {
                 AdhocCoverageTool.m.get("stepHtml")[11] = true;
                 sb.append('\n');
+            } else {
+                AdhocCoverageTool.m.get("stepHtml")[30] = true;
             }
             sb.append(result.getError().getMessage());
+        } else {
+            AdhocCoverageTool.m.get("stepHtml")[26] = true;
         }
         if (sb.length() > 0) {
             AdhocCoverageTool.m.get("stepHtml")[12] = true;
             parent.appendChild(node(doc, "div", "preformatted", sb.toString()));
+        } else {
+            AdhocCoverageTool.m.get("stepHtml")[27] = true;
         }
         Embed embed = stepResult.getEmbed();
         if (embed != null) {
@@ -391,6 +405,8 @@ public class Engine {
                 embedNode.setTextContent(embed.getAsString());
             }
             parent.appendChild(div(doc, "embed", embedNode));
+        } else {
+                AdhocCoverageTool.m.get("stepHtml")[28] = true;
         }
         List<FeatureResult> callResults = stepResult.getCallResults();
         if (callResults != null) { // this is a 'call'
@@ -405,6 +421,8 @@ public class Engine {
                     stepHtml(doc, formatter, sr, calledStepsDiv);
                 }
             }
+        } else {
+            AdhocCoverageTool.m.get("stepHtml")[29] = true;
         }
     }
 
