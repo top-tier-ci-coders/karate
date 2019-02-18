@@ -61,7 +61,7 @@ public class MatchStep {
             AdhocCoverageTool.m.get("matchStep")[3] = true;
             lhsEndPos = raw.indexOf(" !contains");
         } else {
-            AdhocCoverageTool.m.get("matchStep")[4] = true;b
+            AdhocCoverageTool.m.get("matchStep")[4] = true;
         }
         int searchPos = 0;
         if (lhsEndPos != -1) {
