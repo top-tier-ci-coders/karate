@@ -12,5 +12,15 @@ public class AdhocCoverageTool {
         // Ex: m.put("ParseUriPattern", new Boolean[10]);
         m.put("stepHtml", new Boolean[22]);
         m.put("mouseDragged", new Boolean[32]);
+        m.put("stepHtml", new Boolean[31]);
+        m.put("HttpRequestBuilder::copy", new Boolean[15]);
+        m.put("mouseDragged", new Boolean[32]);
+        m.put("configure", new Boolean[35]);
+	    m.put("matchStringOrPattern", new Boolean[103]);
+        m.put("getTypeAsShortString", new Boolean[15]);
+	    m.put("buildResponse", new Boolean[33]);
+        m.put("matchJsonOrObject", new Boolean[33]);
+        m.put("getAsString", new Boolean[10]);
+        m.put("convert", new Boolean[15]);
     }
 }
