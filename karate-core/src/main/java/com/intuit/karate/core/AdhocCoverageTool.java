@@ -20,5 +20,6 @@ public class AdhocCoverageTool {
         m.put("matchJsonOrObject", new Boolean[33]);
         m.put("getAsString", new Boolean[10]);
         m.put("convert", new Boolean[15]);
+        m.put("matchStep", new Boolean[19]);
     }
 }

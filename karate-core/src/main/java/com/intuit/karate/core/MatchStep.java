@@ -39,12 +39,16 @@ public class MatchStep {
     public final String expected;    
 
     public MatchStep(String raw) {
+        AdhocCoverageTool.m.get("matchStep")[0] = true;
         boolean each = false;
         raw = raw.trim();
         if (raw.startsWith("each")) {
+            AdhocCoverageTool.m.get("matchStep")[1] = true;
             each = true;
             raw = raw.substring(4).trim();
-        }        
+        } else {
+            AdhocCoverageTool.m.get("matchStep")[2] = true;
+        }
         boolean contains = false;
         boolean not = false;
         boolean only = false;
@@ -54,47 +58,68 @@ public class MatchStep {
         int rightParenPos = raw.indexOf(')');        
         int lhsEndPos = raw.indexOf(" contains");
         if (lhsEndPos == -1) {
+            AdhocCoverageTool.m.get("matchStep")[3] = true;
             lhsEndPos = raw.indexOf(" !contains");
+        } else {
+            AdhocCoverageTool.m.get("matchStep")[4] = true;
         }
         int searchPos = 0;
         if (lhsEndPos != -1) {
+            AdhocCoverageTool.m.get("matchStep")[5] = true;
             contains = true;
             not = raw.charAt(lhsEndPos + 1) == '!';
             searchPos = lhsEndPos + (not ? 10 : 9);
             int onlyPos = raw.indexOf(" only", searchPos);
             if (onlyPos != -1) {
+                AdhocCoverageTool.m.get("matchStep")[6] = true;
                 only = true;
                 searchPos = onlyPos + 5;
             } else {
+                AdhocCoverageTool.m.get("matchStep")[7] = true;
                 int anyPos = raw.indexOf(" any", searchPos);
                 if (anyPos != -1) {
+                    AdhocCoverageTool.m.get("matchStep")[8] = true;
                     any = true;
                     searchPos = anyPos + 4;
+                } else {
+                    AdhocCoverageTool.m.get("matchStep")[9] = true;
                 }
             }
         } else {
+            AdhocCoverageTool.m.get("matchStep")[10] = true;
             int equalPos = raw.indexOf(" ==", searchPos);
             int notEqualPos = raw.indexOf(" !=", searchPos);
             if (equalPos == -1 && notEqualPos == -1) {
+                AdhocCoverageTool.m.get("matchStep")[11] = true;
                 throw new RuntimeException("syntax error, expected '==' for match");
+            } else {
+                AdhocCoverageTool.m.get("matchStep")[12] = true;
             }
             lhsEndPos = min(equalPos, notEqualPos);
             if (lhsEndPos > spacePos && rightParenPos != -1 && rightParenPos > lhsEndPos) {
+                AdhocCoverageTool.m.get("matchStep")[13] = true;
                 equalPos = raw.indexOf(" ==", rightParenPos);
                 notEqualPos = raw.indexOf(" !=", rightParenPos);
                 if (equalPos == -1 && notEqualPos == -1) {
+                    AdhocCoverageTool.m.get("matchStep")[14] = true;
                     throw new RuntimeException("syntax error, expected '==' for match");
+                } else {
+                    AdhocCoverageTool.m.get("matchStep")[15] = true;
                 }
                 lhsEndPos = min(equalPos, notEqualPos);
+            } else {
+                AdhocCoverageTool.m.get("matchStep")[16] = true;
             }
             not = lhsEndPos == notEqualPos;
             searchPos = lhsEndPos + 3;
         }
         String lhs = raw.substring(0, lhsEndPos).trim();                
         if (spacePos != -1 && (leftParenPos > spacePos || leftParenPos == -1)) {
+            AdhocCoverageTool.m.get("matchStep")[17] = true;
             name = lhs.substring(0, spacePos);
             path = StringUtils.trimToNull(lhs.substring(spacePos));
         } else {
+            AdhocCoverageTool.m.get("matchStep")[18] = true;
             name = lhs;
             path = null;
         }
