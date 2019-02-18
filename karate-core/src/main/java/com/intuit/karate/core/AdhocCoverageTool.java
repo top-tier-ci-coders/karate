@@ -11,7 +11,7 @@ public class AdhocCoverageTool {
         // Initialize boolean arrays here:
         // Ex: m.put("ParseUriPattern", new Boolean[10]);
         m.put("stepHtml", new Boolean[22]);
-        m.put("HttpRequestBuilder::copy", new Boolean[8]);
+        m.put("HttpRequestBuilder::copy", new Boolean[15]);
         m.put("mouseDragged", new Boolean[32]);
     }
 }
