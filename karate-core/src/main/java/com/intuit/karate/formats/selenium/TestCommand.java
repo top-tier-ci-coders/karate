@@ -29,6 +29,8 @@ import com.intuit.karate.validator.RegexValidator;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.intuit.karate.core.AdhocCoverageTool;
+
 /**
  * @author vmchukky
  */
@@ -53,30 +55,46 @@ public class TestCommand {
 
     // https://github.com/SeleniumHQ/selenium-ide/blob/master/packages/selianize/src/command.js
     public String convert(String url, HashMap<String, String> variables) {
+        Boolean[] cov = AdhocCoverageTool.m.get("convert");
         target = preProcess(target, variables);
         value = preProcess(value, variables);
         StringBuilder sb = new StringBuilder("\n# ").append(toString()).append("\n");
         if ("open".equals(command)) {
+            cov[0] = true;
             String commandUrl = url;
             if (urlValidator.validate(new ScriptValue(target)).isPass()) {
+                cov[1] = true;
                 commandUrl = target;
             } else {
+                cov[2] = true;
                 commandUrl = getUrlFromBaseAndPath(commandUrl, target);
             }
             emitOpen(sb, commandUrl);
         } else if ("clickAt".equals(command) || "click".equals(command) || "clickAndWait".equals(command)) {
+            if("clickAt".equals(command)) cov[3] = true;
+            if("click".equals(command)) cov[4] = true;
+            if("clickAndWait".equals(command)) cov[5] = true;
             emitClick(sb);
         } else if ("verifyText".equals(command) || "assertText".equals(command)) {
+            if("verifyText".equals(command)) cov[6] = true;
+            if("assertText".equals(command)) cov[7] = true;
             emitVerifyText(sb);
         } else if ("verifyTitle".equals(command) || "assertTitle".equals(command)) {
+            if("verifyTitle".equals(command)) cov[8] = true;
+            if("assertTitle".equals(command)) cov[9] = true;
             emitVerifyTitle(sb);
         }  else if ("type".equals(command) || "sendKeys".equals(command)) {
+            if("type".equals(command)) cov[10] = true;
+            if("sendKeys".equals(command)) cov[11] = true;
             emitSendKeys(sb);
         } else if ("store".equals(command)) {
+            cov[12] = true;
             variables.put("${" + value + '}', target);
         } else if ("echo".equals(command)) {
+            cov[13] = true;
             emitEcho(sb);
         } else if ("pause".equals(command)) {
+            cov[14] = true;
             emitPause(sb);
         } else {
             //till we incrementally add support for all commands
