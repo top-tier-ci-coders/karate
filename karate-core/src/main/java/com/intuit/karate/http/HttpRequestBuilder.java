@@ -32,6 +32,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.intuit.karate.core.AdhocCoverageTool;
+
 /**
  *
  * @author pthomas3
@@ -52,29 +54,58 @@ public class HttpRequestBuilder {
     private String retryUntil;
 
     public HttpRequestBuilder copy() {
+        AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[0] = true;
         HttpRequestBuilder out = new HttpRequestBuilder();
         out.url = url;
         if (paths != null) {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[1] = true;
             out.paths = new ArrayList(paths);
+        } else {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[8] = true;
         }
+
         if (headers != null) {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[2] = true;
             out.headers = new MultiValuedMap(headers);
+        } else {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[9] = true;
         }
+
         if (params != null) {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[3] = true;
             out.params = new MultiValuedMap(params);
+        } else {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[10] = true;
         }
+
         if (cookies != null) {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[4] = true;
             out.cookies = new LinkedHashMap(cookies);
+        } else {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[11] = true;
         }
+
         if (formFields != null) {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[5] = true;
             out.formFields = new MultiValuedMap(formFields);
+        } else {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[12] = true;
         }
+
         if (multiPartItems != null) {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[6] = true;
             out.multiPartItems = new ArrayList(multiPartItems);
+        } else {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[13] = true;
         }
+
         if (body != null) {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[7] = true;
             out.body = body.copy();
+        } else {
+            AdhocCoverageTool.m.get("HttpRequestBuilder::copy")[14] = true;
         }
+
         out.method = method;
         out.soapAction = soapAction;
         return out;
