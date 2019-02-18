@@ -17,5 +17,6 @@ public class AdhocCoverageTool {
         m.put("getTypeAsShortString", new Boolean[15]);
 	m.put("buildResponse", new Boolean[33]);
         m.put("matchJsonOrObject", new Boolean[33]);
+        m.put("getAsString", new Boolean[10]);
     }
 }
